@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+require('react-datetime');
 class RemindForm extends Component{
     render(){
         return(
@@ -8,9 +9,9 @@ class RemindForm extends Component{
                 </div>
                 <div>
                     <form name="form">
-                        DATE:&nbsp;&nbsp;&nbsp;<input type="date"></input><br/><br/>
-                        TIME :&nbsp;&nbsp;&nbsp;&nbsp;<input type="time"></input><br/><br/>
-                        REMINDER FOR:&nbsp;&nbsp; <input type="text"></input><br/><br/>
+                        DATE: return <Datetime/>
+                        &nbsp;TIME :&nbsp;&nbsp;&nbsp;&nbsp;<input type="time"></input><br/><br/>
+                        REMINDER FOR:&nbsp; <input type="text"></input><br/><br/>
                         REPEAT :&nbsp;&nbsp;&nbsp;<input type="number"></input>
                         <br></br>
                         <button type="submit" form="form" value="Submit">Submit</button> 
