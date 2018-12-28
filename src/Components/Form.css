@@ -1,0 +1,49 @@
+.outer-wrapper{
+    display: flex;
+    
+    width: 100vw;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.title{
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.6;
+    padding: 20px 0;
+}
+
+.input{
+    padding: 10px 0;
+}
+
+
+.form{
+    width: 300px;    
+    display: flex;
+    
+    
+    flex-direction: column;
+    align-self: center;
+}
+
+.button{
+    padding: 8px 20px;
+    background: #e2e2e2;
+    border: 1px solid #222;
+    border-radius: 4px;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.left{
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.element{
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
