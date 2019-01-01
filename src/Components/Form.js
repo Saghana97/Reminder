@@ -5,21 +5,27 @@ import ViewCalendar from "./ViewCalendar";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Form.css";
 import Calendar from "react-big-calendar";
-import moment from "moment";
+import moment, { duration } from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import Switch from "react-switch";
 
 const localizer = Calendar.momentLocalizer(moment); // or globalizeLocalizer
 
 let events = [];
-
+// let slotEvents = [];
 class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       startDate: new Date(),
-      time:"10:00",
+      time: "10:00",
       text: "",
-      event: []
+      event: [],
+      popover: false,
+      extra: 0,
+      slot: {},
+      slotEvent: [],
+      checked:false
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -31,20 +37,22 @@ class Form extends React.Component {
       startDate: date
     });
   }
+  handleChange(checked) {
+    this.setState({ checked });
+  }
 
   handleTextChange = e => {
-    this.setState({ 
+    this.setState({
       text: e.target.value
-     });
+    });
   };
 
   addEvent = e => {
-    const { text, startDate, time, event } = this.state;
+    const { text, startDate, time, event, extra } = this.state;
     if (text && time && startDate) {
       let date = this.convert(startDate);
-      console.log("jjjjjj",time)
       let finalDate = moment(date + " " + time);
-      console.log("final",finalDate)
+      var end = new Date();
 
       event.push({
         title: text,
@@ -52,16 +60,55 @@ class Form extends React.Component {
         end: finalDate._d,
         allDay: false
       });
+      alert("Event added");
+
       this.setState({
         event,
-        startDate
-      })
-      //this.handleChange(startDate); 
-      alert("event Addded");
+        startDate: finalDate._d
+      });
+
+      this.handleChange(startDate);
+
+      var seconds = finalDate - end;
+
+      // this.pushNotification(seconds);
+      if (extra > 0) {
+        setTimeout(() => {
+          var notification = new Notification("Notification title", {
+            icon:
+              "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
+            body: text
+          });
+        }, seconds);
+
+        setTimeout(() => {
+          var notification = new Notification("Notification title", {
+            icon:
+              "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
+            body: text
+          });
+        }, extra * 1000);
+
+        // finalDate = moment(finalDate, "HH:mm:ss")
+        //   .add(extra, "minutes")
+        //   .format("HH:mm");
+        // console.log(finalDate);
+
+        // var diff = finalDate - end;
+      } else {
+        setTimeout(() => {
+          var notification = new Notification("Notification title", {
+            icon:
+              "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
+            body: text
+          });
+        }, seconds);
+      }
     } else {
       alert("missing details");
     }
   };
+
 
   convert = args => {
     var date = new Date(args),
@@ -70,8 +117,49 @@ class Form extends React.Component {
     return [date.getFullYear(), mnth, day].join("-");
   };
 
+  componentDidMount() {
+    document.addEventListener("DOMContentLoaded", function() {
+      if (!Notification) {
+        alert(
+          "Desktop notifications not available in your browser. Try Chromium."
+        );
+        return;
+      }
+
+      if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    });
+  }
+
+  click = e => {
+    // console.log(e, "click");
+    // console.log(this.state.event, "event");
+    this.setState({ popover: true, slot: e });
+    this.setState({ slotEvent: [] });
+    // console.log(moment(this.state.slot.start).format("DD-MM-YYYY"), "start");
+    // console.log(moment(this.state.event[0].start).format("DD-MM-YYYY"));
+    console.log("hhh",this.state.event.length)
+    for (var i = 0; i < this.state.event.length; i++) 
+    {
+      if (
+        moment(this.state.event[i].start).format("DD-MM-YYYY") ===
+        moment(this.state.slot.start).format("DD-MM-YYYY")
+      ) {
+        this.state.slotEvent.push(this.state.event[i]);
+
+        // slotEvents.push(this.state.event[i]);
+      }
+      
+    }
+    // this.state.slotEvent.push([]);
+   
+    console.log(this.state.slotEvent, "event push");
+    this.setState({ popover: false });
+    this.setState({ popover: true });
+  };
+
   render() {
-    console.log(this.state.event);
+    console.log(this.state.slotEvent, "Render");
     return (
       <div className="outer-wrapper">
         <div className="title">Set a Reminder</div>
@@ -107,7 +195,17 @@ class Form extends React.Component {
               />
             </span>
           </div>
-          {/* SET TIME: <input type="number" /> */}
+          <div className="element">
+            <span className="left">Set Time : </span>
+            <span className="right">
+              <input
+                type="number"
+                onChange={e => {
+                  this.setState({ extra: e.target.value });
+                }}
+              />
+            </span>
+          </div>
           <div className="button" onClick={e => this.addEvent(e)}>
             {" "}
             Submit{" "}
@@ -126,7 +224,76 @@ class Form extends React.Component {
             marginBottom: 100,
             marginTop: 50
           }}
+          selectable={true}
+          onSelectSlot={e => {
+            this.click(e);
+          }}
         />
+        <div
+          className="popover"
+          style={{
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.5)",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            display: this.state.popover ? "flex" : "none"
+          }}
+        >
+          <div
+            className="dialog"
+            style={{
+              width: "30vw",
+              height: "20vh",
+              background: "#fff"
+            }}
+          >
+            <div
+              className="close"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "inherit",
+                height: "20px"
+              }}
+            >
+              <div
+                style={{ marginTop: 20, marginRight: 20, cursor: "pointer" }}
+                onClick={() => {
+                  this.setState({ popover: false });
+                }}
+              >
+                {" "}
+                X{" "}
+              </div>
+            </div>
+            <div style={{ height: "60px", width: "inherit" }}>
+            {this.state.slotEvent.length}
+              {this.state.slotEvent &&
+                this.state.slotEvent.map((event, index) => {
+                  return (
+                    <div>
+                    <p style={{ color: "#000" }}>
+                      {" "}
+                      {event.title} &nbsp; {moment(event.start).format("hh:mm")}
+                    <label htmlFor="normal-switch">
+                    <Switch
+                      onChange={this.handleChange}
+                      checked={this.state.checked}
+                      id="normal-switch"
+                    />
+                  </label>
+                  </p>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
