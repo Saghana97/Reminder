@@ -1,6 +1,5 @@
 .outer-wrapper{
     display: flex;
-    
     width: 100vw;
     justify-content: center;
     flex-direction: column;
@@ -14,7 +13,8 @@
 }
 
 .input{
-    padding: 10px 0;
+    padding: 5px 0;
+    margin: 5px;    
 }
 
 
@@ -29,11 +29,14 @@
 
 .button{
     padding: 8px 20px;
-    background: #e2e2e2;
-    border: 1px solid #222;
-    border-radius: 4px;
+    background: #2AA1AF ;
+    border: none;
+    border: 2px solid #fff;
+    border-radius: 6px;
     margin: 20px;
     cursor: pointer;
+    color: #fff;
+    font-weight: 500;
 }
 
 .left{
@@ -46,4 +49,22 @@
     align-items: center;
     display: flex;
     flex-direction: row;
+}
+
+.dialog{
+    min-width: 30vw;
+    min-height: 20vh;
+    /* width : auto;
+    height: fit-content; */
+    background: #fff;    
+    box-shadow: 10px 11px 20px 0px rgba(0,0,0,0.7)
+}
+
+.event{
+    width: inherit;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: space-around;
 }

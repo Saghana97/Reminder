@@ -10,6 +10,7 @@
     "react-datetime": "^2.16.3",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.2",
+    "react-switch": "^3.0.4",
     "react-time-picker": "^3.1.1"
   },
   "scripts": {

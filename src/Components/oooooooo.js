@@ -10,7 +10,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import Switch from "react-switch";
 
 const localizer = Calendar.momentLocalizer(moment); // or globalizeLocalizer
-var notification = null;
 
 let events = [];
 // let slotEvents = [];
@@ -27,61 +26,79 @@ class Form extends React.Component {
       slot: {},
       slotEvent: [],
       checked: false,
-      idx: 0
+      currentTime: new Date()
     };
     this.handleChange = this.handleChange.bind(this);
   }
   onChange = time => this.setState({ time });
 
   handleChange(date) {
-    console.log(date, "date");
+    // console.log(date, "date");
     this.setState({
       startDate: date
     });
+
   }
 
-  // switchClick = args => {
-  //   console.log("args args args", args);
-  //   this.setState({ idx: args });
-  // };
+  handleSwitchChange = checked => dd => { 
 
-  handleSwitchChange = (checked, event, id) => {
-    // this.setState({ checked });
-    console.log(checked, id, "event");
-    console.log(this.state.slotEvent, "slots");
-    this.state.slotEvent[this.state.idx].checked = !this.state.slotEvent[
-      this.state.idx
-    ].checked;
-    // console.log("effefef", this.state.idx);
+    console.log("set rime,", dd);
 
-    var final = moment(this.state.slotEvent[id].start).toDate();
+    this.setState({ checked});
+    // console.log("Args", this.state.currentTime);
+    var finalDate = moment(this.state.currentTime);
+    // console.log("date is ",finalDate);
+    var end = new Date();
+    
+    var seconds = finalDate - end;
 
-    var end = moment().toDate();
-    var seconds = (final - end) / 1000;
-    seconds.toFixed(0);
+    console.log("secoccecec",seconds);
+
     var notification = null;
-    console.log(seconds);
-    if (this.state.extra > 0) {
-      setTimeout(() => {
-        notification = new Notification("Your Reminder", {
-          icon:
-            "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
-          body: this.state.text
-        });
-      }, seconds*1000);
-      setTimeout(() => {
-        notification = new Notification("Notification title", {
-          icon: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-          body: this.state.text
-        });
-      }, this.state.extra * 1000);
+    
+    // console.log("seconds is",finalDate);
+    
+
+    if (this.state.checked) {
+      console.log("inside checked");
+      if (this.state.extra > 0)
+       { 
+        console.log("inside greater");
+        setTimeout(() => {
+          notification = new Notification("Your Reminder", {
+            icon:
+              "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+            body: this.state.text
+          });
+        }, seconds);
+
+        setTimeout(() => {
+          notification = new Notification("Your Reminder", {
+            icon:
+              "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+            body: this.state.text
+          });
+        }, this.state.extra * 1000);
+
+        // finalDate = moment(finalDate, "HH:mm:ss")
+        //   .add(extra, "minutes")
+        //   .format("HH:mm");
+        // console.log(finalDate);
+
+        // var diff = finalDate - end;
+      } else {
+        console.log("inside 0");
+        setTimeout(() => {
+          notification = new Notification("Your Reminder", {
+            icon:
+              "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+            body: this.state.text
+          });
+        }, seconds);
+      }
     } else {
-      setTimeout(() => {
-        notification = new Notification("Notification title", {
-          icon: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-          body: this.state.text
-        });
-      }, seconds * 1000);
+      console.log("inside not checked");
+      notification = null;
     }
   };
 
@@ -96,7 +113,6 @@ class Form extends React.Component {
     if (text && time && startDate) {
       let date = this.convert(startDate);
       let finalDate = moment(date + " " + time);
-
       var end = new Date();
 
       event.push({
@@ -115,16 +131,14 @@ class Form extends React.Component {
       this.handleChange(startDate);
 
       var seconds = finalDate - end;
+      // console.log("final date",finalDate);
+      // console.log("end date is",end);
 
       // this.pushNotification(seconds);
     } else {
       alert("missing details");
     }
   };
-
-  // pushNotification = args => {
-
-  // };
 
   convert = args => {
     var date = new Date(args),
@@ -136,7 +150,9 @@ class Form extends React.Component {
   componentDidMount() {
     document.addEventListener("DOMContentLoaded", function() {
       if (!Notification) {
-        alert("Desktop notifications not available in your browser. ");
+        alert(
+          "Desktop notifications not available in your browser. Try Chromium."
+        );
         return;
       }
 
@@ -146,32 +162,37 @@ class Form extends React.Component {
   }
 
   click = e => {
-    console.log(e, "click");
-    console.log(this.state.event, "event");
-
+    // console.log(e, "click");
+    // console.log(this.state.event, "event");
     this.setState({ popover: true, slot: e });
     this.setState({ slotEvent: [] });
     // console.log(moment(this.state.slot.start).format("DD-MM-YYYY"), "start");
     // console.log(moment(this.state.event[0].start).format("DD-MM-YYYY"));
-    if (this.state.event.length > 0) {
-      for (var i = 0; i < this.state.event.length; i++) {
-        if (
-          moment(this.state.event[i].start).format("DD-MM-YYYY") ===
-          moment(this.state.slot.start).format("DD-MM-YYYY")
-        ) {
-          this.state.slotEvent.push(this.state.event[i]);
+    // console.log("hhh", this.state.event.length);
+    for (var i = 0; i < this.state.event.length; i++) {
+      if (
+        moment(this.state.event[i].start).format("DD-MM-YYYY") ===
+        moment(this.state.slot.start).format("DD-MM-YYYY")
+      ) {
+        this.state.slotEvent.push(this.state.event[i]);
 
-          // slotEvents.push(this.state.event[i]);
-        }
+        // slotEvents.push(this.state.event[i]);
       }
-      console.log("event push", this.state.slotEvent);
-      this.setState({ popover: false });
-      this.setState({ popover: true });
     }
+    // this.state.slotEvent.push([]);
+
+    // console.log(this.state.slotEvent, "event push");
+    this.setState({ popover: false });
+    this.setState({ popover: true });
+  };
+
+  switchClick = args => {
+    console.log(args, "args args args");
+    this.setState({ currentTime: args });
   };
 
   render() {
-    console.log(this.state.slotEvent, "Render");
+    // console.log(this.state.slotEvent, "Render");
     return (
       <div className="outer-wrapper">
         <div className="title">Set a Reminder</div>
@@ -279,14 +300,14 @@ class Form extends React.Component {
             </div>
             <div style={{ width: "inherit" }}>
               <div style={{ fontSize: 14, fontWeight: "500", padding: 20 }}>
-                {this.state.slotEvent.length} events for the day{" "}
+                {this.state.slotEvent.length} events{" "}
               </div>
               {this.state.slotEvent &&
                 this.state.slotEvent.map((event, index) => {
                   return (
                     <div
                       id={index}
-                      //onClick={() => this.switchClick(event.start)}
+                      onClick={() => this.switchClick(event.start)}
                       className="event"
                     >
                       <div style={{ color: "#000" }}>
@@ -294,13 +315,15 @@ class Form extends React.Component {
                         {event.title} &nbsp;{" "}
                       </div>
                       <div>{moment(event.start).format("hh:mm")}</div>
-                      {/* <div key={index} onClick={() => this.switchClick(index)} > */}
-                      <Switch
-                        onChange={this.handleSwitchChange}
-                        checked={this.state.checked}
-                        id={index}
-                      />
-                      {/* </div> */}
+                      <div >
+                        <label htmlFor="normal-switch">
+                          <Switch
+                            onChange={this.handleSwitchChange(this.state.checked,event.start)}
+                            checked={this.state.checked}
+                            id="normal-switch"
+                          />
+                        </label>
+                      </div>
                     </div>
                   );
                 })}
