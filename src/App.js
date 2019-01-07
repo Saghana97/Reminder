@@ -7,7 +7,6 @@ class App extends Component {
       <div className="App">
         {/* <div className="header"> REMINDER </div> */}
         <header className="header">REMINDER</header>
-        {/* <RemindForm/> */}
         <Form />
       </div>
     );
