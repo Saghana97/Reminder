@@ -1,7 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
-import ViewCalendar from "./ViewCalendar";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Form.css";
 import Calendar from "react-big-calendar";
@@ -13,7 +12,6 @@ const localizer = Calendar.momentLocalizer(moment); // or globalizeLocalizer
 var notification = null;
 
 let events = [];
-// let slotEvents = [];
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -40,19 +38,12 @@ class Form extends React.Component {
     });
   }
 
-  // switchClick = args => {
-  //   console.log("args args args", args);
-  //   this.setState({ idx: args });
-  // };
-
   handleSwitchChange = (checked, event, id) => {
-    // this.setState({ checked });
     console.log(checked, id, "event");
     console.log(this.state.slotEvent, "slots");
     this.state.slotEvent[this.state.idx].checked = !this.state.slotEvent[
       this.state.idx
     ].checked;
-    // console.log("effefef", this.state.idx);
 
     var final = moment(this.state.slotEvent[id].start).toDate();
 
@@ -115,16 +106,10 @@ class Form extends React.Component {
       this.handleChange(startDate);
 
       var seconds = finalDate - end;
-
-      // this.pushNotification(seconds);
     } else {
       alert("missing details");
     }
   };
-
-  // pushNotification = args => {
-
-  // };
 
   convert = args => {
     var date = new Date(args),
@@ -151,8 +136,6 @@ class Form extends React.Component {
 
     this.setState({ popover: true, slot: e });
     this.setState({ slotEvent: [] });
-    // console.log(moment(this.state.slot.start).format("DD-MM-YYYY"), "start");
-    // console.log(moment(this.state.event[0].start).format("DD-MM-YYYY"));
     if (this.state.event.length > 0) {
       for (var i = 0; i < this.state.event.length; i++) {
         if (
@@ -160,8 +143,6 @@ class Form extends React.Component {
           moment(this.state.slot.start).format("DD-MM-YYYY")
         ) {
           this.state.slotEvent.push(this.state.event[i]);
-
-          // slotEvents.push(this.state.event[i]);
         }
       }
       console.log("event push", this.state.slotEvent);
@@ -173,6 +154,9 @@ class Form extends React.Component {
   render() {
     console.log(this.state.slotEvent, "Render");
     return (
+
+
+
       <div className="outer-wrapper">
         <div className="title">Set a Reminder</div>
 
@@ -191,7 +175,7 @@ class Form extends React.Component {
             <span className="left">Time:</span>
             <span className="right">
               <TimePicker
-                className="input"
+                className="input1"
                 onChange={this.onChange}
                 value={this.state.time}
               />
@@ -223,11 +207,9 @@ class Form extends React.Component {
             {" "}
             Submit{" "}
           </div>
-        </div>
 
-        <Calendar
+          <Calendar
           localizer={localizer}
-          // defaultDate={new Date()}
           defaultView="month"
           events={this.state.event}
           style={{
@@ -286,7 +268,7 @@ class Form extends React.Component {
                   return (
                     <div
                       id={index}
-                      //onClick={() => this.switchClick(event.start)}
+                      
                       className="event"
                     >
                       <div style={{ color: "#000" }}>
@@ -294,18 +276,21 @@ class Form extends React.Component {
                         {event.title} &nbsp;{" "}
                       </div>
                       <div>{moment(event.start).format("hh:mm")}</div>
-                      {/* <div key={index} onClick={() => this.switchClick(index)} > */}
+        
                       <Switch
                         onChange={this.handleSwitchChange}
                         checked={this.state.checked}
                         id={index}
                       />
-                      {/* </div> */}
+                    
                     </div>
                   );
                 })}
             </div>
           </div>
+        </div>        
+
+
         </div>
       </div>
     );

@@ -1,11 +1,10 @@
 .App {
   text-align: center;
-  
-}
+  }
 
 .header{
   background: #10455B ;
-  width: 100vw;
+  /* width: 100vw; */
   height: 12vh;
   display: flex;
   align-items: center;

@@ -1,6 +1,6 @@
 .outer-wrapper{
     display: flex;
-    width: 100vw;
+    width: 100%;
     justify-content: center;
     flex-direction: column;
 }
@@ -17,9 +17,15 @@
     margin: 5px;    
 }
 
+.input1{
+    width: 180px;
+    padding: 5px 0;
+    margin: 5px;    
+}
+
 
 .form{
-    width: 300px;    
+    width: 330px;    
     display: flex;
     
     
@@ -43,6 +49,8 @@
     font-weight: 500;
     font-size: 18px;
 }
+
+
 
 .element{
     justify-content: space-between;

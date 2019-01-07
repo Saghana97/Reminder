@@ -5,8 +5,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="header"> REMINDER </div>
-        {/* <header >REMINDER</header> */}
+        {/* <div className="header"> REMINDER </div> */}
+        <header className="header">REMINDER</header>
         {/* <RemindForm/> */}
         <Form />
       </div>
